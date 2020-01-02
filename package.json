@@ -1,0 +1,16 @@
+{
+  "name": "tweet_bot",
+  "version": "1.0.0",
+  "description": "Tweet bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "nodemon bot.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alex Rodgers",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.2",
+    "twit": "^2.2.11"
+  }
+}
