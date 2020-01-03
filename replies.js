@@ -1,5 +1,5 @@
 console.log('bot is starting.');
-
+// I'm too lazy to properly split out the files.
 let Twit = require('twit');
 let config = require('./config');
 let localDate = require('@js-joda/core').LocalDate;
@@ -7,6 +7,20 @@ let ChronoUnit = require('@js-joda/core').ChronoUnit;
 let ZoneOffset = require('@js-joda/core').ZoneOffset;
 
 let T = new Twit(config);
+
+let mentions = ['@IsItFri13th', '@isitfri13th', '@Isitfri13th', '@IsitFri13th', '@isitFri13th'];
+
+console.log('streaming');
+var stream = T.stream('statuses/filter', { track: mentions });
+
+stream.on('tweet', (tweet) => {
+   console.log(tweet);
+   let formattedText = tweet.text.toLowerCase();
+   if (tweet.in_reply_to_screen_name === 'IsItFri13th' 
+   && formattedText.includes('friday the 13th')) {
+      newTweet(tweet);
+   }
+});
 
 let isItFri13th = () => {
    let dateObj = new Date();
@@ -28,7 +42,7 @@ let isItFri13th = () => {
    }
 }
 
-let newTweet = () => {
+let newTweet = (tweet) => {
 
    let response = (err, data, response) => {
       if (err) {
@@ -37,11 +51,9 @@ let newTweet = () => {
          console.log(data.text);
       }
    }
-
-   let tweet = {};
-   tweet.status = isItFri13th();
-      
-   T.post('statuses/update', tweet, response);
+   
+   T.post('statuses/update', {
+      status: `@${tweet.user.screen_name} ${isItFri13th()}`,
+      in_reply_to_status_id: tweet.id_str
+   }, response);
 }
-
-newTweet();
